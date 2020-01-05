@@ -1,0 +1,284 @@
+<html>
+	<head>
+		<title>jellymlg.github.io</title>
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+		<script>
+			var ctx=0;
+			var update;
+			var cooldown=0;
+			window.onload=function() {
+				var canvas=document.getElementById("gamearea");
+				ctx=canvas.getContext("2d");
+				document.onkeydown=function(){if(cooldown==0){game.playerTurn(event.key);}};
+			}
+			setInterval(function(){if(cooldown!=0){cooldown--;}},5);
+			function startGame(reset) {
+				ctx.fillStyle="black";
+				ctx.fillRect(0,0,800,800);
+				game.randomStartPos(150,650);
+				game.randomStartDir();
+				game.playerStart();
+				game.foodGen();
+				if(reset==true) {
+					document.getElementById("reset").style.display="none";
+					game.score=0;
+					update=setInterval(newFrame,37);
+				}else {
+					document.getElementById("play").style.display="none";
+					update=setInterval(newFrame,37);
+				}
+			}
+			var game={
+				score:0,
+				playerStartPos:[],
+				playerPos:[],
+				direction:"",
+				playerTail:[],
+				maxLength:5,
+				updateScore: function() {
+					ctx.fillStyle="white";
+					ctx.font="30px Arial";
+					ctx.fillText(game.score,700,40);
+				},
+				randomStartPos: function(min,max) {
+					game.playerStartPos[0]=Math.floor(Math.random()*1000);
+					game.playerStartPos[1]=Math.floor(Math.random()*1000);
+					for(i=0;i<20;i++) {
+						if(game.playerStartPos[0]>max) {
+							game.playerStartPos[0]=game.playerStartPos[0]-Math.floor(Math.random()*100);
+						}
+						if(game.playerStartPos[0]<min) {
+							game.playerStartPos[0]=game.playerStartPos[0]+Math.floor(Math.random()*100);
+						}
+						if(game.playerStartPos[1]>max) {
+							game.playerStartPos[1]=game.playerStartPos[1]-Math.floor(Math.random()*100);
+						}
+						if(game.playerStartPos[1]<min) {
+							game.playerStartPos[1]=game.playerStartPos[1]+Math.floor(Math.random()*100);
+						}
+					}
+					game.playerStartPos[0]=""+game.playerStartPos[0];
+					game.playerStartPos[0]=game.playerStartPos[0].slice("");
+					game.playerStartPos[1]=""+game.playerStartPos[1];
+					game.playerStartPos[1]=game.playerStartPos[1].slice("");
+					if(parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1])<5 && parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1])!=0) {
+						let nums="";
+						for(i=0;i<game.playerStartPos[0].length;i++) {
+							nums+=game.playerStartPos[0][i];
+						}
+						nums=nums-game.playerStartPos[0][game.playerStartPos[0].length-1];
+						game.playerStartPos[0]=nums;
+					}
+					if(parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1])<5 && parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1])!=0) {
+						let nums="";
+						for(i=0;i<game.playerStartPos[1].length;i++) {
+							nums+=game.playerStartPos[1][i];
+						}
+						nums=nums-game.playerStartPos[1][game.playerStartPos[1].length-1];
+						game.playerStartPos[1]=nums;
+					}
+					if(parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1])>4 && parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1])!=0) {
+						let nums="";
+						for(i=0;i<game.playerStartPos[0].length;i++) {
+							nums+=game.playerStartPos[0][i];
+						}
+						let add=10-parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1]);
+						nums=parseInt(nums)+parseInt(add);
+						game.playerStartPos[0]=nums;
+					}
+					if(parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1])>4 && parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1])!=0) {
+						let nums="";
+						for(i=0;i<game.playerStartPos[1].length;i++) {
+							nums+=game.playerStartPos[1][i];
+						}
+						let add=10-parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1]);
+						nums=parseInt(nums)+parseInt(add);
+						game.playerStartPos[1]=nums;
+					}
+					game.playerStartPos[0]=parseInt(game.playerStartPos[0]);
+					game.playerStartPos[1]=parseInt(game.playerStartPos[1]);
+				},
+				randomStartDir: function() {
+					let d=Math.floor(Math.random()*10);
+					let random=["up","down","right","left","up","down","right","left","up","down"];
+					game.direction=random[d];
+				},
+				playerStart: function() {
+					ctx.fillStyle="white";
+					ctx.fillRect(game.playerStartPos[0],game.playerStartPos[1],10,10);
+					game.playerPos[0]=game.playerStartPos[0];
+					game.playerPos[1]=game.playerStartPos[1];
+				},
+				playerMove: function() {
+					ctx.fillStyle="white";
+					game.playerTail[game.playerTail.length]=game.playerPos[0];
+					game.playerTail[game.playerTail.length]=game.playerPos[1];
+					switch(game.direction) {
+						case "up":
+							game.playerPos[1]=game.playerPos[1]-10
+							ctx.fillRect(game.playerPos[0],game.playerPos[1],10,10);
+							break;
+						case "down":
+							game.playerPos[1]=game.playerPos[1]+10;
+							ctx.fillRect(game.playerPos[0],game.playerPos[1],10,10);
+							break;
+						case "right":
+							game.playerPos[0]=game.playerPos[0]+10;
+							ctx.fillRect(game.playerPos[0],game.playerPos[1],10,10);
+							break;
+						case "left":
+							game.playerPos[0]=game.playerPos[0]-10;
+							ctx.fillRect(game.playerPos[0],game.playerPos[1],10,10);
+							break;
+					}
+				},
+				playerTurn: function(key) {
+					cooldown=5;
+					switch(key) {
+						case "ArrowUp":
+							if(game.direction!="down") {
+								game.direction="up";
+							}
+							break;
+						case "ArrowDown":
+							if(game.direction!="up") {
+								game.direction="down";
+							}
+							break;
+						case "ArrowRight":
+							if(game.direction!="left") {
+								game.direction="right";
+							}
+							break;
+						case "ArrowLeft":
+							if(game.direction!="right") {
+								game.direction="left";
+							}
+							break;
+					}
+				},
+				foodGen: function() {
+					game.randomStartPos(20,780);
+				},
+				hungry: function() {
+					if(game.playerPos[0]==game.playerStartPos[0] && game.playerPos[1]==game.playerStartPos[1]) {
+						game.foodGen();
+						game.maxLength=game.maxLength+2;
+						game.score++;
+					}
+				},
+				drawTail: function() {
+					if(game.playerTail.length>game.maxLength*2) {
+						game.playerTail.splice(0,2);
+					}
+					ctx.fillStyle="white";
+					for(let i=0;i<game.playerTail.length;i=i+2) {
+						ctx.fillRect(game.playerTail[i],game.playerTail[i+1],10,10);
+					}
+					ctx.fillStyle="red";
+					ctx.fillRect(game.playerStartPos[0],game.playerStartPos[1],10,10);
+				},
+				isPlayerDead: function() {
+					let die=false;
+					for(i=0;i<game.playerTail.length;i++) {
+						if(i%2==0) {
+							if(game.playerPos[0]==game.playerTail[i] && game.playerPos[1]==game.playerTail[i+1]) {
+								die=true;
+								break;
+							}
+						}
+					}
+					if(game.playerPos[0]==800 || game.playerPos[1]==800 || game.playerPos[0]==0 || game.playerPos[1]==0 || die==true) {
+						clearInterval(update);
+						game.maxLength=5;
+						game.playerTail=[];
+						document.getElementById("reset").style.display="inline-block";
+						if(game.score>parseInt(document.getElementById("highscore").innerText.split(" ")[1])) {
+							document.getElementById("highscore").innerText="Highscore: "+game.score;
+						}
+					}
+				}
+			};
+			function newFrame() {
+				ctx.fillStyle="black";
+				ctx.fillRect(0,0,800,800);
+				game.updateScore();
+				game.playerMove();
+				game.drawTail();
+				game.hungry();
+				game.isPlayerDead();
+			}
+		</script>
+		<style>
+			body {
+				background-color: #555;
+				font-family: arial;
+				margin: 0px;
+			}
+			#container {
+				position: absolute;
+				top: calc((100% - 800px) / 2);
+				left: calc((100% - 800px) / 2);
+			}
+			#gamearea {
+				background-color: black;
+			}
+			#reset,#play {
+				outline: none;
+				background-color: lightgray;
+				font-size: 100%;
+				border: 3px solid gray;
+				position: absolute;
+				left: 47.5%;
+				top: 50%;
+				transition: 0.5s;
+			}
+			#reset:hover,#play:hover {
+				transition: 0.5s;
+				background-color: gray;
+				border-color: #555;
+				cursor: pointer;
+			}
+			#highscore {
+				color: white;
+				font-size: 32px;
+				position: absolute;
+				margin: 0px;
+				height: 40px;
+				width: 180px;
+				top: calc((100% - 800px) / 4 - 20px);
+				left: calc(100% / 2 - 90px);
+			}
+			#repo {
+				position: absolute;
+				margin: 0px;
+				font-size: 32px;
+				height: 40px;
+				width: 370px;
+				bottom: calc((100% - 800px) / 4 - 20px);
+				left: calc(100% / 2 - 185px);
+			}
+			a {
+				text-decoration: none;
+				color: orangered;
+				transition: 0.5s;
+			}
+			a:hover {
+				text-decoration: underline;
+				color: coral;
+				transition: 0.5s;
+			}
+		</style>
+	</head>
+	<body>
+		<p id="highscore">Highscore: 0</p>
+		<p id="repo">
+			<a href="https://github.com/jellymlg" target="_blank">https://github.com/jellymlg</a>
+		</p>
+		<div id="container">
+			<canvas id="gamearea" width="800px" height="800px"></canvas>
+			<button id="play" onclick="startGame(false)" style="display: inline-block;">Play</button>
+			<button id="reset" onclick="startGame(true)" style="display: none;">Restart</button>
+		</div>
+	</body>
+</html>
