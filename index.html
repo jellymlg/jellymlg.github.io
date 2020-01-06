@@ -217,6 +217,34 @@
 				color: coral;
 				transition: 0.5s;
 			}
+			#touch {
+				position: absolute;
+   				width: 600px;
+				height: 600px;
+				left: calc(50% - 300px);
+				bottom: 0px;
+			}
+			.triangle {
+				width: 0px;
+				border: 100px solid transparent;
+			}
+			#up {
+				border-bottom: 100px solid darkgray;
+    				margin-left: 200px;
+			}
+			#left {
+			    	border-right: 100px solid darkgray;
+    				float: left;
+			}
+			#right {
+				border-left: 100px solid darkgray;
+    				float: right;
+			}
+			#down {
+				border-top: 100px solid darkgray;
+    				margin-left: 200px;
+    				margin-top: 200px;
+			}
 		</style>
 	</head>
 	<body>
@@ -229,5 +257,11 @@
 			<button id="play" onclick="startGame(false)" style="display: inline-block;">Play</button>
 			<button id="reset" onclick="startGame(true)" style="display: none;">Restart</button>
 		</div>
+		<div id="touch">
+            		<div class="triangle" id="up"></div>
+            		<div class="triangle" id="left"></div>
+			<div class="triangle" id="right"></div>
+			<div class="triangle" id="down"></div>
+        	</div>
 	</body>
 </html>
