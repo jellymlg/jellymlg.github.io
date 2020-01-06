@@ -13,6 +13,10 @@
 				}else {
 					document.getElementById("repo").style.display="none";
 					document.getElementById("touch").style.display="block";
+					document.getElementById("up").addEventListener("click",function(){game.playerTurn("ArrowUp")});
+					document.getElementById("down").addEventListener("click",function(){game.playerTurn("ArrowDown")});
+					document.getElementById("right").addEventListener("click",function(){game.playerTurn("ArrowRight")});
+					document.getElementById("left").addEventListener("click",function(){game.playerTurn("ArrowLeft")});
 				}
 			}
 			setInterval(function(){if(cooldown!=0){cooldown--;}},5);
