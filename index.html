@@ -12,6 +12,7 @@
 					document.onkeydown=function(){if(cooldown==0){game.playerTurn(event.key);}};
 				}else {
 					document.getElementById("repo").style.display="none";
+					document.getElementById("touch").style.display="block";
 				}
 			}
 			setInterval(function(){if(cooldown!=0){cooldown--;}},5);
@@ -218,6 +219,7 @@
 				transition: 0.5s;
 			}
 			#touch {
+				display: none;
 				position: absolute;
    				width: 600px;
 				height: 600px;
