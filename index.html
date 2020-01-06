@@ -41,62 +41,8 @@
 					ctx.fillText(game.score,700,40);
 				},
 				randomStartPos: function(min,max) {
-					game.playerStartPos[0]=Math.floor(Math.random()*1000);
-					game.playerStartPos[1]=Math.floor(Math.random()*1000);
-					for(i=0;i<20;i++) {
-						if(game.playerStartPos[0]>max) {
-							game.playerStartPos[0]=game.playerStartPos[0]-Math.floor(Math.random()*100);
-						}
-						if(game.playerStartPos[0]<min) {
-							game.playerStartPos[0]=game.playerStartPos[0]+Math.floor(Math.random()*100);
-						}
-						if(game.playerStartPos[1]>max) {
-							game.playerStartPos[1]=game.playerStartPos[1]-Math.floor(Math.random()*100);
-						}
-						if(game.playerStartPos[1]<min) {
-							game.playerStartPos[1]=game.playerStartPos[1]+Math.floor(Math.random()*100);
-						}
-					}
-					game.playerStartPos[0]=""+game.playerStartPos[0];
-					game.playerStartPos[0]=game.playerStartPos[0].slice("");
-					game.playerStartPos[1]=""+game.playerStartPos[1];
-					game.playerStartPos[1]=game.playerStartPos[1].slice("");
-					if(parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1])<5 && parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1])!=0) {
-						let nums="";
-						for(i=0;i<game.playerStartPos[0].length;i++) {
-							nums+=game.playerStartPos[0][i];
-						}
-						nums=nums-game.playerStartPos[0][game.playerStartPos[0].length-1];
-						game.playerStartPos[0]=nums;
-					}
-					if(parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1])<5 && parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1])!=0) {
-						let nums="";
-						for(i=0;i<game.playerStartPos[1].length;i++) {
-							nums+=game.playerStartPos[1][i];
-						}
-						nums=nums-game.playerStartPos[1][game.playerStartPos[1].length-1];
-						game.playerStartPos[1]=nums;
-					}
-					if(parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1])>4 && parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1])!=0) {
-						let nums="";
-						for(i=0;i<game.playerStartPos[0].length;i++) {
-							nums+=game.playerStartPos[0][i];
-						}
-						let add=10-parseInt(game.playerStartPos[0][game.playerStartPos[0].length-1]);
-						nums=parseInt(nums)+parseInt(add);
-						game.playerStartPos[0]=nums;
-					}
-					if(parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1])>4 && parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1])!=0) {
-						let nums="";
-						for(i=0;i<game.playerStartPos[1].length;i++) {
-							nums+=game.playerStartPos[1][i];
-						}
-						let add=10-parseInt(game.playerStartPos[1][game.playerStartPos[1].length-1]);
-						nums=parseInt(nums)+parseInt(add);
-						game.playerStartPos[1]=nums;
-					}
-					game.playerStartPos[0]=parseInt(game.playerStartPos[0]);
-					game.playerStartPos[1]=parseInt(game.playerStartPos[1]);
+					game.playerStartPos[0]=Math.floor(Math.floor(Math.random()*(max-min)+min)/10)*10;
+					game.playerStartPos[1]=Math.floor(Math.floor(Math.random()*(max-min)+min)/10)*10;
 				},
 				randomStartDir: function() {
 					let d=Math.floor(Math.random()*10);
@@ -115,19 +61,19 @@
 					game.playerTail[game.playerTail.length]=game.playerPos[1];
 					switch(game.direction) {
 						case "up":
-							game.playerPos[1]=game.playerPos[1]-10
+							game.playerPos[1]-=10
 							ctx.fillRect(game.playerPos[0],game.playerPos[1],10,10);
 							break;
 						case "down":
-							game.playerPos[1]=game.playerPos[1]+10;
+							game.playerPos[1]+=10;
 							ctx.fillRect(game.playerPos[0],game.playerPos[1],10,10);
 							break;
 						case "right":
-							game.playerPos[0]=game.playerPos[0]+10;
+							game.playerPos[0]+=10;
 							ctx.fillRect(game.playerPos[0],game.playerPos[1],10,10);
 							break;
 						case "left":
-							game.playerPos[0]=game.playerPos[0]-10;
+							game.playerPos[0]-=10;
 							ctx.fillRect(game.playerPos[0],game.playerPos[1],10,10);
 							break;
 					}
@@ -163,7 +109,7 @@
 				hungry: function() {
 					if(game.playerPos[0]==game.playerStartPos[0] && game.playerPos[1]==game.playerStartPos[1]) {
 						game.foodGen();
-						game.maxLength=game.maxLength+2;
+						game.maxLength+=2;
 						game.score++;
 					}
 				},
