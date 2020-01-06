@@ -6,10 +6,12 @@
 			var ctx=0;
 			var update;
 			var cooldown=0;
+			var COOLDOWN;
 			window.onload=function() {
 				ctx=document.getElementById("gamearea").getContext("2d");
 				if(navigator.userAgent.indexOf("Windows")!=-1) {
 					document.onkeydown=function(){if(cooldown==0){game.playerTurn(event.key);}};
+					COOLDOWN=5;
 				}else {
 					document.getElementById("repo").style.display="none";
 					document.getElementById("touch").style.display="block";
@@ -17,9 +19,10 @@
 					document.getElementById("down").addEventListener("click",function(){game.playerTurn("ArrowDown")});
 					document.getElementById("right").addEventListener("click",function(){game.playerTurn("ArrowRight")});
 					document.getElementById("left").addEventListener("click",function(){game.playerTurn("ArrowLeft")});
+					COOLDOWN=3;
 				}
 			}
-			setInterval(function(){if(cooldown!=0){cooldown--;}},5);
+			setInterval(function(){if(cooldown!=0){cooldown--;}},COOLDOWN);
 			function startGame(reset) {
 				ctx.fillStyle="black";
 				ctx.fillRect(0,0,800,800);
@@ -87,7 +90,7 @@
 					}
 				},
 				playerTurn: function(key) {
-					cooldown=5;
+					cooldown=COOLDOWN;
 					switch(key) {
 						case "ArrowUp":
 							if(game.direction!="down") {
