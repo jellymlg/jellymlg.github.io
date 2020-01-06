@@ -7,9 +7,12 @@
 			var update;
 			var cooldown=0;
 			window.onload=function() {
-				var canvas=document.getElementById("gamearea");
-				ctx=canvas.getContext("2d");
-				document.onkeydown=function(){if(cooldown==0){game.playerTurn(event.key);}};
+				ctx=document.getElementById("gamearea").getContext("2d");
+				if(navigator.userAgent.indexOf("Windows")!=-1) {
+					document.onkeydown=function(){if(cooldown==0){game.playerTurn(event.key);}};
+				}else {
+					document.getElementById("repo").style.display="none";
+				}
 			}
 			setInterval(function(){if(cooldown!=0){cooldown--;}},5);
 			function startGame(reset) {
