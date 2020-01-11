@@ -132,7 +132,7 @@
 						game.playerTail.splice(0,2);
 					}
 					ctx.fillStyle="white";
-					for(let i=0;i<game.playerTail.length;i=i+2) {
+					for(let i=0;i<game.playerTail.length;i+=2) {
 						ctx.fillRect(game.playerTail[i],game.playerTail[i+1],10,10);
 					}
 					ctx.fillStyle="red";
