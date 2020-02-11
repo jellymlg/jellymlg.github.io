@@ -13,7 +13,7 @@
 						var addr = document.getElementById("addr").value;
 						if(addr != "" && addr.indexOf(".") != -1) {
 							document.getElementById("loading").style.display = "block";
-							socket = new WebSocket("ws://" + addr)
+							socket = new WebSocket("wss://" + addr)
 							socket.onopen = function() {
 								console.log("Socket open");
 								document.getElementById("container").style.display = "none";
@@ -102,7 +102,7 @@
 	</head>
 	<body>
 		<div id="container">
-			<p id="pre">ws://</p>
+			<p id="pre">wss://</p>
 			<input type="text" id="addr" placeholder="Server address">
 			<button id="conn">Connect</button>
 			<p id="loading"><img src="cnt.png">    Connecting . . .</p>
