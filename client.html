@@ -1,0 +1,112 @@
+<html>
+	<head>
+		<title>Tetris multiplayer</title>
+		<link rel="shortcut icon" type="image/x-icon" href="fav.png">
+		<script>
+			window.onload = function() {
+				setInterval(function() {
+					var socket;
+					var ready = false;
+					var c = 0;
+					var score = 0;
+					document.getElementById("conn").addEventListener("click",function() {
+						var addr = document.getElementById("addr").value;
+						if(addr != "" && addr.indexOf(".") != -1) {
+							document.getElementById("loading").style.display = "block";
+							socket = new WebSocket("ws://" + addr)
+							socket.onopen = function() {
+								console.log("Socket open");
+								document.getElementById("container").style.display = "none";
+								document.getElementById("area").style.display = "block";
+								ready = true;
+							}
+							socket.onmessage = function(msg) {
+								console.log("Server: " + msg.data);
+							}
+							socket.onerror = function(e) {
+								document.getElementById("loading").style.display = "";
+								alert("Error: unable to connect to " + socket.url);
+							}
+						}
+					});
+					return function() {
+						if(ready) {
+							console.log("YEET");
+							c++;
+							if(c == 50) {
+								c = 0;
+								socket.send(score);
+							}
+						}else {
+							console.log("wait");
+						}
+					};
+				}(), 1000);
+			}
+		</script>
+		<style>
+			body {
+				margin: 0px;
+				background-color: #555;
+
+			}
+			#area {
+				display: none;
+				background-color: black;
+				position: absolute;
+				top: calc((100% - 900px) / 2);
+				left: calc((100% - 900px) / 2);
+			}
+			#container {
+				position: absolute;
+				top: calc((100% - 50px) / 2);
+				left: calc((100% - 600px) / 2);
+				width: 600px;
+				height: 50px;
+				text-align: center;
+			}
+			#addr, #conn {
+				font-family: arial;
+				font-size: 30px;
+				transition: 0.5s;
+			}
+			#conn:hover {
+				cursor: pointer;
+				box-shadow: 5px 5px grey;
+				transition: 0.5s;
+			}
+			@keyframes rotate {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+			img {
+				animation: rotate 1s linear infinite;
+				width: 30px;
+			}
+			#loading {
+				display: none;
+				font-family: arial;
+				font-size: 30px;
+			}
+			#pre {
+				display: inline-block;
+				font-family: arial;
+				font-size: 30px;
+				margin: 0px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<p id="pre">ws://</p>
+			<input type="text" id="addr" placeholder="Server address">
+			<button id="conn">Connect</button>
+			<p id="loading"><img src="cnt.png">    Connecting . . .</p>
+		</div>
+		<canvas id="area" width="900px" height="900px"></canvas>
+	</body>
+</html>
