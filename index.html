@@ -8,6 +8,18 @@
 				margin: 10%;
 				font-size: 75px;
 			}
+			p, div {
+				display: inline-block;
+				margin: 0px;
+				text-align: center;
+			}
+			div#counter div {
+    				border: 3px solid orange;
+    				padding: 5px;
+			}
+			p.number {
+				font-size: 500%;
+			}
 		</style>
 	</head>
 	<body>
@@ -15,5 +27,42 @@
 			<li><a href="snake.html">Snake</a></li>
 			<li><a href="tetris.html">Tetris</a></li>
 		</ul>
+		<div id="counter">
+    			<div>
+     				<p class="number" id="year">x</p>
+     				<br>
+     				<p>Years</p>
+    			</div>
+    			<div>
+     				<p class="number" id="month">x</p>
+     				<br>
+     				<p>Months</p>
+    			</div>
+        		<div>
+     				<p class="number" id="day">x</p>
+     				<br>
+     				<p>Days</p>
+    			</div>
+        		<div>
+     				<p class="number" id="hour">x</p>
+     				<br>
+     				<p>Hours</p>
+    			</div>
+        		<div>
+     				<p class="number" id="minute">x</p>
+     				<br>
+     				<p>Minutes</p>
+    			</div>
+        		<div>
+     				<p class="number" id="second">x</p>
+     				<br>
+     				<p>Seconds</p>
+    			</div>
+        		<div>
+     				<p class="number" id="millisecond">x</p>
+     				<br>
+     				<p>Milliseconds</p>
+    			</div>
+		</div>
 	</body>
 </html>
