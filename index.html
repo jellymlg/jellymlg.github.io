@@ -21,6 +21,23 @@
 				font-size: 500%;
 			}
 		</style>
+		<script>
+			var worker;
+			var response;
+			window.onload = function() {
+				worker = new Worker("worker.js");
+				worker.onmessage = function(event) {
+					response = JSON.parse(event.data);
+					document.getElementById("year").innerText = response.year;
+					document.getElementById("month").innerText = response.month;
+					document.getElementById("day").innerText = response.day;
+					document.getElementById("hour").innerText = response.hour;
+					document.getElementById("minute").innerText = response.minute;
+					document.getElementById("second").innerText = response.second;
+					document.getElementById("millisecond").innerText = response.millisecond;
+				}
+			}
+		</script>
 	</head>
 	<body>
 		<ul>
