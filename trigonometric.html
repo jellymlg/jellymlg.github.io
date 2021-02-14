@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html lang="hu">
+    <head>
+        <title>BRUH</title>
+        <link rel="shortcut icon" type="image/x-icon" href="favicon_index.png">
+        <style>
+            html, body {
+                background-color: rgb(18, 18, 18);
+                height: 100%;
+                margin: 0px;
+                font-family: Arial;
+                margin-top: calc(100% / 7);
+                padding-left: 5%;
+                overflow: hidden;
+            }
+            select, #end, #answer {
+                color: red;
+            }
+            textarea {
+                resize: none;
+                width: 6%;
+                height: 4%;
+                color: royalblue;
+            }
+            select, textarea, #end, #answer, #ok {
+                outline: none;
+                font-size: 200%;
+                margin: 0px;
+                background-color: rgb(18, 18, 18);
+            }
+            div {
+                height: 100%;
+            }
+            div * {
+                float: left;
+                border: none;
+                padding: 0px;
+            }
+            #answer {
+                display: block;
+            }
+            #ok {
+                width: 5%;
+                height: 4%;
+                background-color: gray;
+                transition-property: background-color;
+                transition: 0.7s;
+            }
+            #ok:hover {
+                background-color: goldenrod;
+                cursor: pointer;
+                transition: 0.7s;
+            }
+            select:hover {
+                cursor: pointer;
+            }
+        </style>
+        <script>
+            const funcpm = [[1, 1], [1, -1], [-1, -1], [-1, 1]], exact = {
+                sine: [[0, "0"], [30, "1/2"], [45, "√2/2"], [60, "√3/2"], [90, "1"], [180, "0"], [270, "-1"], [360, "0"]],
+                cosine: [[0, "1"], [30, "√3/2"], [45, "√2/2"], [60, "1/2"], [90, "0"], [180, "-1"], [270, "0"], [360, "1"]],
+                sin: function(n) {
+                    for(let i = 0; i < this.sine.length; i++) if(this.sine[i][0] == n) return this.sine[i][1];
+                    return Math.sin(n * Math.PI / 180);
+                },
+                cos: function(n) {
+                    for(let i = 0; i < this.cosine.length; i++) if(this.cosine[i][0] == n) return this.cosine[i][1];
+                    return Math.cos(n * Math.PI / 180);
+                }
+            };
+            function calc() {
+                if(isNaN(parseInt(document.getElementById("num").value))) return;
+                let pm1 = parseInt(document.getElementById("pm").value), num = parseInt(document.getElementById("num").value), x = Math.abs(num) > 360 ? Math.abs(num % 360) : num, pm2 = funcpm[0], pm3 = num < 0 ? -1 : 1, ans = document.getElementById("answer");
+                if(x < 90) {
+                    if(x < 0) x = Math.abs(x);
+                }else if(x > 90 && x < 180) {
+                    x = 180 - x;
+                    pm2 = funcpm[1];
+                }else if(x > 180 && x < 270) {
+                    x -= 180;
+                    pm2 = funcpm[2];
+                }else {
+                    x = 360 - x;
+                    pm2 = funcpm[3];
+                }
+                let pmf;
+                if(document.getElementById("func").value == "sin") {
+                    pmf = e(pm1 * pm2[0] * pm3);
+                    ans.innerText = e(pm1) + "sin(" + num + ") = " + e(pm1) + "sin(" + (num / 360 | 0) + " * 360 " + e(num % 360, true) + " " + Math.abs(num % 360) + ")";
+                    ans.innerText += " = " + e(pm1) + "sin(" + (num % 360) + ") = " + e(pm1 * pm3) + "sin(" + Math.abs(num % 360) + ") = " + pmf + "sin(" + x + ") = " + (pmf + exact.sin(x)).replace("--", "");
+                }else {
+                    pmf = e(pm1 * pm2[1]);
+                    ans.innerText = e(pm1) + "cos(" + num + ") = " + e(pm1) + "cos(" + (num / 360 | 0) + " * 360 " + e(num % 360, true) + " " + Math.abs(num % 360) + ")";
+                    ans.innerText += " = " + e(pm1) + "cos(" + (num % 360) + ") = " + e(pm1) + "cos(" + Math.abs(num % 360) + ") = " + pmf + "cos(" + x + ") = " + (pmf + exact.cos(x)).replace("--", "");
+                }
+            }
+            function e(n, p = false) {
+                return n > 0 ? (p ? "+" : "") : "-";
+            }
+        </script>
+    </head>
+    <body>
+        <div>
+            <select id="pm">
+                <option value="1" selected>+</option>
+                <option value="-1">-</option>
+            </select>
+            <select id="func">
+                <option value="sin" selected>sin(</option>
+                <option value="cos">cos(</option>
+            </select>
+            <textarea id="num" maxlength="5" placeholder="-6969"></textarea>
+            <p id="end">)</p>
+            <button id="ok" onclick="calc()">Calc</button>
+            <br><br><br><br>
+            <p id="answer"></p>
+        </div>
+    </body>
+</html>
