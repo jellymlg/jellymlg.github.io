@@ -56,9 +56,11 @@
             }
         </style>
         <script>
-            const funcpm = [[1, 1], [1, -1], [-1, -1], [-1, 1]], exact = {
+            const funcpm = [[1, 1, 1], [1, -1, -1], [-1, -1], [-1, 1]], exact = {
                 sine: [[0, "0"], [30, "1/2"], [45, "√2/2"], [60, "√3/2"], [90, "1"], [180, "0"], [270, "-1"], [360, "0"]],
                 cosine: [[0, "1"], [30, "√3/2"], [45, "√2/2"], [60, "1/2"], [90, "0"], [180, "-1"], [270, "0"], [360, "1"]],
+                tangent: [[0, "0"], [30, "√3/3"], [45, "1"], [60, "√3"], [90, "Ø"], [180, "0"], [270, "Ø"], [360, "0"]],
+                cotangent: [[0, "Ø"], [30, "√3"], [45, "0"], [60, "√3/3"], [90, "0"], [180, "Ø"], [270, "0"], [360, "Ø"]],
                 sin: function(n) {
                     for(let i = 0; i < this.sine.length; i++) if(this.sine[i][0] == n) return this.sine[i][1];
                     return Math.sin(n * Math.PI / 180);
@@ -66,12 +68,21 @@
                 cos: function(n) {
                     for(let i = 0; i < this.cosine.length; i++) if(this.cosine[i][0] == n) return this.cosine[i][1];
                     return Math.cos(n * Math.PI / 180);
-                }
+                },
+                tg: function(n) {
+                    for(let i = 0; i < this.tangent.length; i++) if(this.tangent[i][0] == n) return this.tangent[i][1];
+                    return Math.tan(n * Math.PI / 180);
+                },
+                ctg: function(n) {
+                    for(let i = 0; i < this.cotangent.length; i++) if(this.cotangent[i][0] == n) return this.cotangent[i][1];
+                    return 1 / Math.tan(n * Math.PI / 180);
+                },
             };
             function calc() {
+                let pm1 = parseInt(document.getElementById("pm").value), num = parseInt(document.getElementById("num").value), func = document.getElementById("func").value, x = func == "tg" | func == "ctg" ? 180 : 360, pm2 = funcpm[0], pm3 = num < 0 ? -1 : 1, ans = document.getElementById("answer");
+                ans.innerText = "";
                 if(isNaN(parseInt(document.getElementById("num").value))) return;
-                let pm1 = parseInt(document.getElementById("pm").value), num = parseInt(document.getElementById("num").value), x = Math.abs(num) > 360 ? Math.abs(num % 360) : num, pm2 = funcpm[0], pm3 = num < 0 ? -1 : 1, ans = document.getElementById("answer");
-                if(x < 90) {
+                if((x = Math.abs(num) > x ? Math.abs(num % x) : num) < 90) {
                     if(x < 0) x = Math.abs(x);
                 }else if(x > 90 && x < 180) {
                     x = 180 - x;
@@ -83,16 +94,46 @@
                     x = 360 - x;
                     pm2 = funcpm[3];
                 }
-                let pmf;
-                if(document.getElementById("func").value == "sin") {
-                    pmf = e(pm1 * pm2[0] * pm3);
-                    ans.innerText = e(pm1) + "sin(" + num + ") = " + e(pm1) + "sin(" + (num / 360 | 0) + " * 360 " + e(num % 360, true) + " " + Math.abs(num % 360) + ")";
-                    ans.innerText += " = " + e(pm1) + "sin(" + (num % 360) + ") = " + e(pm1 * pm3) + "sin(" + Math.abs(num % 360) + ") = " + pmf + "sin(" + x + ") = " + (pmf + exact.sin(x)).replace("--", "");
-                }else {
-                    pmf = e(pm1 * pm2[1]);
-                    ans.innerText = e(pm1) + "cos(" + num + ") = " + e(pm1) + "cos(" + (num / 360 | 0) + " * 360 " + e(num % 360, true) + " " + Math.abs(num % 360) + ")";
-                    ans.innerText += " = " + e(pm1) + "cos(" + (num % 360) + ") = " + e(pm1) + "cos(" + Math.abs(num % 360) + ") = " + pmf + "cos(" + x + ") = " + (pmf + exact.cos(x)).replace("--", "");
+                let pmf, st = [];
+                switch(func) {
+                    case "sin":
+                        pmf = e(pm1 * pm2[0] * pm3);
+                        st[st.length] = e(pm1) + "sin(" + num + ")";
+                        st[st.length] = " = " + e(pm1) + "sin(" + (num / 360 | 0) + " * 360 " + e(num % 360, true) + " " + Math.abs(num % 360) + ")";
+                        st[st.length] = " = " + e(pm1) + "sin(" + (num % 360) + ")"
+                        st[st.length] = " = " + e(pm1 * pm3) + "sin(" + Math.abs(num % 360) + ")";
+                        st[st.length] = " = " + pmf + "sin(" + x + ")";
+                        st[st.length] = " = " + (pmf + exact.sin(x)).replace("--", "").replace("-0", "0").replace("-Ø", "Ø");
+                        break;
+                    case "cos":
+                        pmf = e(pm1 * pm2[1]);
+                        st[st.length] = e(pm1) + "cos(" + num + ")"
+                        st[st.length] = " = " + e(pm1) + "cos(" + (num / 360 | 0) + " * 360 " + e(num % 360, true) + " " + Math.abs(num % 360) + ")";
+                        st[st.length] = " = " + e(pm1) + "cos(" + (num % 360) + ")"
+                        st[st.length] = " = " + e(pm1) + "cos(" + Math.abs(num % 360) + ")"
+                        st[st.length] = " = " + pmf + "cos(" + x + ")"
+                        st[st.length] = " = " + (pmf + exact.cos(x)).replace("--", "").replace("-0", "0").replace("-Ø", "Ø");
+                        break;
+                    case "tg": 
+                        pmf = e(pm1 * pm2[2] * pm3);
+                        st[st.length] = e(pm1) + "tg(" + num + ")"
+                        st[st.length] = " = " + e(pm1) + "tg(" + (num / 180 | 0) + " * 180 " + e(num % 180, true) + " " + Math.abs(num % 180) + ")";
+                        st[st.length] = " = " + e(pm1) + "tg(" + (num % 180) + ")";
+                        st[st.length] = " = " + e(pm1 * pm3) + "tg(" + Math.abs(num % 180) + ")";
+                        st[st.length] = " = " + pmf + "tg(" + x + ")"
+                        st[st.length] = " = " + (pmf + exact.tg(x)).replace("--", "").replace("-0", "0").replace("-Ø", "Ø");
+                        break;
+                    case "ctg":
+                        pmf = e(pm1 * pm2[2] * pm3);
+                        st[st.length] = e(pm1) + "ctg(" + num + ")"
+                        st[st.length] = " = " + e(pm1) + "ctg(" + (num / 180 | 0) + " * 180 " + e(num % 180, true) + " " + Math.abs(num % 180) + ")";
+                        st[st.length] = " = " + e(pm1) + "ctg(" + (num % 180) + ")";
+                        st[st.length] = " = " + e(pm1 * pm3) + "ctg(" + Math.abs(num % 180) + ")";
+                        st[st.length] = " = " + pmf + "ctg(" + x + ")";
+                        st[st.length] = " = " + (pmf + exact.ctg(x)).replace("--", "").replace("-0", "0").replace("-Ø", "Ø");
+                        break;
                 }
+                for(let i = 0; i < st.length; i++) if(i == 0 || st[i] != st[i - 1]) ans.innerText += st[i];
             }
             function e(n, p = false) {
                 return n > 0 ? (p ? "+" : "") : "-";
@@ -108,6 +149,8 @@
             <select id="func">
                 <option value="sin" selected>sin(</option>
                 <option value="cos">cos(</option>
+                <option value="tg">tg(</option>
+                <option value="ctg">ctg(</option>
             </select>
             <textarea id="num" maxlength="5" placeholder="-6969"></textarea>
             <p id="end">)</p>
