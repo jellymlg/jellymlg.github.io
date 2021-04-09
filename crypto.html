@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crypto</title>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        iframe{
+            height:50%;
+            width: 50%;
+            border: none;
+            position: relative;
+            left: 25%;
+        }
+    </style>
+    <script>
+        window.onload=function(){
+	        fetch(new Request("https://chainz.cryptoid.info/firo/api.dws?q=getbalance&a=a4yvGWai1yQyTb7PckogAZEyQBtJDJm9zs")).then(
+                response => {
+                    response.text().then(
+                        function(text){
+                            document.getElementById("xd").src="https://changenow.io/embeds/exchange-widget/v2/widget.html?amount="+parseFloat(text)+"&from=firo&to=usdt";
+                        }
+                    )
+                }
+            );
+	        fetch(new Request("https://explorer-api.ravenland.org/address/RGWij2rnDSauVJMjV3sLVFucQJdQt31xou/balances")).then(
+                response => {
+                    response.text().then(
+                        function(text){
+                            document.getElementById("lmao").src="https://changenow.io/embeds/exchange-widget/v2/widget.html?amount="+parseFloat(JSON.parse(text).data.RVN)+"&from=rvn&to=usdt";
+                        }
+                    )
+                }
+            );
+            
+        }
+    </script>
+</head>
+<body>
+    <iframe id="xd"></iframe>
+    <iframe id="lmao"></iframe>
+</body>
+</html>
